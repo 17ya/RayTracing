@@ -94,8 +94,8 @@ class Scene {
 
   getOffset = (x: number, y: number) => {
     const { width = 0, height = 0 } = this.canvas ?? {};
-    const glx = Math.abs(width / 2 + (x > width / 2 ? -x : x));
-    const gly = Math.abs(height / 2 + (y > height / 2 ? y : -y));
+    const glx = Math.abs(width + (x > width ? -x : x));
+    const gly = Math.abs(height + (y > height ? y : -y));
     return (this.imageData.width * gly + glx) * 4;
   };
 

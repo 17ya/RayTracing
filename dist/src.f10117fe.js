@@ -234,8 +234,8 @@ var Scene = /*#__PURE__*/_createClass(function Scene(width, height, color) {
         _ref2$height = _ref2.height,
         height = _ref2$height === void 0 ? 0 : _ref2$height;
 
-    var glx = Math.abs(width / 2 + (x > width / 2 ? -x : x));
-    var gly = Math.abs(height / 2 + (y > height / 2 ? y : -y));
+    var glx = Math.abs(width + (x > width ? -x : x));
+    var gly = Math.abs(height + (y > height ? y : -y));
     return (_this.imageData.width * gly + glx) * 4;
   };
 
@@ -463,20 +463,31 @@ var _Vector = _interopRequireDefault(require("./Vector"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import Color from "./Color.js";
-var scene = new _Scene.default(400, 500, [255, 255, 255, 255]);
+//判断光线是否与某个球相交
+var hit_sphere = function hit_sphere(center, radius, r) {
+  var oc = r.origin.subtract(center);
+  var a = r.direction.dot(r.direction);
+  var b = 2.0 * r.direction.dot(oc);
+  var c = oc.dot(oc) - radius * radius;
+  var discriminant = b * b - 4 * a * c;
+  return discriminant > 0;
+}; //实现渐变色
+
 
 var rayColor = function rayColor(r) {
+  if (hit_sphere(new _Vector.default(0, 0, -1), 0.5, r)) return new _Vector.default(1, 0, 0);
   var unitDirection = r.direction.unit();
   var t = 0.5 * (unitDirection.y + 1.0);
   var a = new _Color.default(1.0, 1.0, 1.0).toVector();
   var b = new _Color.default(0.5, 0.7, 1.0).toVector(); //线性插值
 
   return a.multiply(1.0 - t).add(b.multiply(t));
-}; //Image
+};
 
+var scene = new _Scene.default(800, 500, [255, 255, 255, 255]); //Image
 
 var aspect_ratio = 16.0 / 9.0;
-var image_width = 400;
+var image_width = 800;
 var image_height = image_width / aspect_ratio; //Camera
 
 var viewport_height = 2.0;
@@ -535,7 +546,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59385" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52284" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
