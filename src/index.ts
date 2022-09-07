@@ -1,9 +1,9 @@
 // import Color from "./Color.js";
 
-import Scene from "./other/Scene.js";
-import Color from "./src/Color.js";
-import { Ray } from "./src/Ray.js";
-import Vector from "./src/Vector.js";
+import Scene from "../other/Scene";
+import Color from "./Color";
+import { Ray } from "./Ray";
+import Vector from "./Vector";
 
 const scene = new Scene(400, 500, [255, 255, 255, 255]);
 
