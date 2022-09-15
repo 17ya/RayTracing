@@ -470,14 +470,29 @@ var hit_sphere = function hit_sphere(center, radius, r) {
   var b = 2.0 * r.direction.dot(oc);
   var c = oc.dot(oc) - radius * radius;
   var discriminant = b * b - 4 * a * c;
-  return discriminant > 0;
+
+  if (discriminant < 0) {
+    return -1;
+  } else {
+    var t1 = (-b - Math.sqrt(discriminant)) / (2 * a);
+    if (t1 > 0) return t1;
+    var t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
+    if (t2 > 0) return t2;
+    return -1;
+  }
 }; //实现渐变色
 
 
 var rayColor = function rayColor(r) {
-  if (hit_sphere(new _Vector.default(0, 0, -1), 0.5, r)) return new _Vector.default(1, 0, 0);
+  var t = hit_sphere(new _Vector.default(0, 0, -1), 0.5, r);
+
+  if (t > 0) {
+    var N = r.pointAtParameter(t).subtract(new _Vector.default(0, 0, -1)).unit();
+    return new _Vector.default(N.x + 1, N.y + 1, N.z + 1).multiply(0.5);
+  }
+
   var unitDirection = r.direction.unit();
-  var t = 0.5 * (unitDirection.y + 1.0);
+  t = 0.5 * (unitDirection.y + 1.0);
   var a = new _Color.default(1.0, 1.0, 1.0).toVector();
   var b = new _Color.default(0.5, 0.7, 1.0).toVector(); //线性插值
 
@@ -546,7 +561,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52284" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56361" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

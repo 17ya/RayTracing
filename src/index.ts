@@ -12,14 +12,27 @@ const hit_sphere = (center: Vector, radius: number, r: Ray) => {
   const b = 2.0 * r.direction.dot(oc);
   const c = oc.dot(oc) - radius * radius;
   const discriminant = b * b - 4 * a * c;
-  return discriminant > 0;
+
+  if (discriminant < 0) {
+    return -1;
+  } else {
+    const t1 = (-b - Math.sqrt(discriminant)) / (2 * a);
+    if (t1 > 0) return t1;
+    const t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
+    if (t2 > 0) return t2;
+    return -1;
+  }
 };
 
 //实现渐变色
 const rayColor = (r: Ray) => {
-  if (hit_sphere(new Vector(0, 0, -1), 0.5, r)) return new Vector(1, 0, 0);
+  let t = hit_sphere(new Vector(0, 0, -1), 0.5, r);
+  if (t > 0) {
+    const N = r.pointAtParameter(t).subtract(new Vector(0, 0, -1)).unit();
+    return new Vector(N.x + 1, N.y + 1, N.z + 1).multiply(0.5);
+  }
   const unitDirection = r.direction.unit();
-  const t = 0.5 * (unitDirection.y + 1.0);
+  t = 0.5 * (unitDirection.y + 1.0);
   const a = new Color(1.0, 1.0, 1.0).toVector();
   const b = new Color(0.5, 0.7, 1.0).toVector();
   //线性插值
